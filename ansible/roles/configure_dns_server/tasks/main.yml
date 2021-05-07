@@ -1,0 +1,58 @@
+- name: Install bind
+  yum: 
+    name: bind
+    state: present
+
+- name: Install bind-utils
+  yum: 
+    name: bind-utils
+    state: present
+
+- name: Render named.conf template
+  template:
+    src: named.conf.template
+    dest: /etc/named.conf
+    owner: root
+    group: named
+    mode: '0640'
+  notify: # Restart named if named.conf file changed
+  - Restart named
+
+- name: Create directory
+  file:
+    path: /var/named/master/
+    state: directory
+    owner: root
+    group: named
+
+- name: Render dns zone template
+  template:
+    src: dns-zone.template
+    dest: /var/named/master/{{dns_zone_name}}
+    owner: root
+    group: named
+    mode: '0640'
+  notify:
+  - Restart named
+
+- name: Render dhclient hook (see man man dhclient-script) to prevent /etc/resolv.conf update
+  template:
+    src: dhclient-enter-hooks.template
+    dest: /etc/dhclient-enter-hooks 
+    owner: root
+    group: root
+    mode: '0640'
+
+- name: Render /etc/resolv.conf template
+  template:
+    src: resolv.conf.template
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: '0640'
+
+- name: Start and enable named
+  systemd:
+    name: named
+    enabled: yes
+    state: started

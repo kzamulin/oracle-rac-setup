@@ -1,0 +1,2 @@
+nameserver {{node_ip}}
+search {{dns_zone_name}}

@@ -1,0 +1,5 @@
+---
+- hosts: dnssrv
+  become: true
+  roles:
+    - ../roles/configure_dns_server

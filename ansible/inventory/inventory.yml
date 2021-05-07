@@ -1,0 +1,16 @@
+all:
+  vars:
+    ansible_user: root
+    dns_zone_name: kostyan.ru
+  children:
+    dns:
+      hosts:
+       dnssrv:
+         node_ip: 192.168.50.10
+         external_ip: 192.168.224.150
+    oradb:
+      hosts:
+       node-1:
+         node_ip: 192.168.50.11
+       node-2:
+         node_ip: 192.168.50.12

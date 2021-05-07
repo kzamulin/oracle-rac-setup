@@ -1,0 +1,5 @@
+# Restart when notified
+- name: Restart named
+  systemd:
+    name: named
+    state: restarted
